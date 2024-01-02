@@ -1,13 +1,28 @@
+from typing import Optional, List
 from fastapi import FastAPI
+from pydantic import BaseModel
+
+
+class ShopInfo(BaseModel):
+    name: str
+    location: str
+
+
+class Item(BaseModel):
+    name: str
+    description: Optional[str] = None
+    price: int
+    tax: Optional[float] = None
+
+
+class Data(BaseModel):
+    shop_info: Optional[ShopInfo]
+    imems: List[Item]
+
 
 app = FastAPI()
 
 
-@app.get("/countries/{country_name}")
-async def country(country_name: str):
-    return {"country_name": country_name}
-
-
-@app.get("/countries/japan")
-async def japan():
-    return {"message": "This is Japan！"}
+@app.post("/")
+async def index(data: Data):
+    return {"data": data}
